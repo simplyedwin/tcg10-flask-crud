@@ -9,9 +9,15 @@ app = Flask(__name__)
 def show_login_form():
     return render_template('login_form.template.html')
 
+
 @app.route('/calculate')
 def show_calculate_form():
     return render_template('calculate.template.html')
+
+
+@app.route('/bmi')
+def show_bmi_form():
+    return render_template('bmi.template.html')
 
 # this route process is to allow a post request to the /login url
 
@@ -22,8 +28,9 @@ def process_login_form():
     print(request.form)  # to retrieve information from html
     username = request.form.get("username")
     password = request.form.get("password")
-    print("Username is {} and password is {}".format(username,password))
+    print("Username is {} and password is {}".format(username, password))
     return 'data received'  # MUST ALWAYS PROVIDES A RETURN STATEMENT
+
 
 @app.route('/calculate', methods=['POST'])
 def process_calculate():
@@ -33,8 +40,22 @@ def process_calculate():
     input2 = request.form.get("input2")
     totalsum = int(input1)+int(input2)
     print("Total sum is {}".format(totalsum))
-    return render_template('calculate.template.html',totalsum=totalsum)
+    return render_template('calculate.template.html', totalsum=totalsum)
 
+
+@app.route('/bmi', methods=['POST'])
+def process_bmi():
+    print('data received')
+    print(request.form)  # to retrieve information from html
+    weight = request.form.get("weight")
+    height = request.form.get("height")
+    
+    if not weight or not height:
+        bmi = 'Please provide your weight and height values again!'
+    else:  
+        bmi = 'The calculated BMI based on your weight and height is {}'.format(round(int(weight)/float(height)**2,2))
+        print("BMI is {}".format(bmi))
+    return render_template('bmi.template.html', bmi=bmi)
 
 
 if __name__ == "__main__":
